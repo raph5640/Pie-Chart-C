@@ -17,12 +17,13 @@ void affiche_tab(char* tab[], int tab_size);
 void clean(char* tab[],int size);
 //voir la déclaration et la documentations de ces fonction a partir de la ligne 44
 
-const char *separator = "=:";
-const char *titre = "/home/raphael/pie/pie.png";
+const char *separator = "=:";                           //les séparateurs possibles pour les arguments lors du lancement du programme
+const char *titre = "/home/raphael/pie/pie.png";        //Chemin de l'image ou l'on souhaite qu'elle soit crée
 
 int main(int argc, char* argv[]) {
 
-    char* tab[argc * 2]; // Notre tableau de valeurs
+    char* tab[(argc * 2)-2]; // Notre tableau de valeurs
+    printf("taille tab=%d\n",(argc * 2)-2);
     gdImagePtr image;    // Notre image
 
     initialise_tableau(argv, argc, tab, sizeof(tab) / sizeof(tab[0]));
@@ -42,19 +43,28 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
     int couleur_random = gdImageColorAllocate(*img, rand() % 256, rand() % 256, rand() % 256);
 
     int size_data = tab_size / 2;
-    int data[size_data];
+    printf("data_size=%d\n",size_data);
+    int data_pourcentage[size_data]; //Tableau data_pourcentage contient tout les pourcentages type (int)
+    char* data_pays[size_data];      //Tableau data_pays contient tout les noms de pays type (char*)
     int k = 0;
-    for (int i = 0; i < tab_size && k < size_data-1; i++) {
+    int l = 0;
+    //Initialisation du tableau data a l'aide du tableau de base exemple: de tab[] = {"Paris","50","Londre","12","Tokyo","30"} vers data[]={50,12,30}
+    for (int i = 0; i < tab_size && k < size_data; i++) {
         if (atoi(tab[i]) != 0) {
-            data[k] = atoi(tab[i]);
-            printf("data[%d]=%d\n", k, data[k]);
+            data_pourcentage[k] = atoi(tab[i]);
+            printf("data_pourcentage[%d]=%d\n", k, data_pourcentage[k]);
             k++;
+        }else{
+            data_pays[l] = tab[i];
+            printf("data_pays[%d]=%s\n", l, data_pays[l]);
+            l++;
         }
     }
-    gdImageFilledArc(*img, 500, 500, 500,500,100,200,couleur_random, gdArc);
+    gdImageFilledArc(*img, 500,500, 200,200, 0,250, couleur_random,gdArc);
+    //Fin de l'Initialisation du tableau data a l'aide du tableau de base
 }
 
-/* Initialise le tableau de valeur (tab) avec les données entrée en arguments lors du lancement du programme avec une commande
+/* Initialise le tableau (tab) avec les données entrée en arguments lors du lancement du programme avec une commande exemple :tab[] = {"Paris","50","Londre","12","Tokyo","30"}
  * elle initialise les valeurs de tab[]
  * return : rien
  * param : char* argv[], int argc, char* tab[], int tab_size
@@ -65,7 +75,7 @@ void initialise_tableau(char* argv[], int argc, char* tab[], int tab_size) {
     }
 
     int k = 0;
-    for (int i = 0; i < argc && k < tab_size; i++) {
+    for (int i = 1; i < argc && k < tab_size; i++) {
         char* strtoken = strtok(argv[i], separator);
         while (strtoken != NULL && k < tab_size) {
             tab[k] = strdup(strtoken);      //Alloue la mémoire pour les chaines de caracteres a initialiser dans le tableau de valeur et initialise la valeur
@@ -105,14 +115,14 @@ void telecharge_image(gdImagePtr img){
 
 void affiche_tab(char* tab[], int tab_size) {
     for (int i = 0; i < tab_size && tab[i] != NULL; i++) {
-        printf("%s\n", tab[i]);
+        printf("tab[%d]=%s\n",i, tab[i]);
     }
 }
 
 /* Fonction clean
  * Elle libère la mémoire alloué par le tableau de valeurs qui initialise les arguments données en entrée lors de l'éxécution du programme
  * return : rien
- * param : aucun
+ * param : char* tab[], int tab_size
  */
 void clean(char* tab[], int tab_size){
     for(int i=0; i<tab_size && tab[i]!=NULL;i++){

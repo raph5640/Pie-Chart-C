@@ -4,5 +4,6 @@ project(pie LANGUAGES C)
 find_package(gd)
 add_executable(pie main.c)
 target_link_libraries (pie gd)
+target_link_libraries(pie m)
 install(TARGETS pie
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
