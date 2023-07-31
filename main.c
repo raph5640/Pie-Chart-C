@@ -38,6 +38,11 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
+/* Fonction dessine : sépare le tableau général en deux tableaux data_pourcentage[] et data_pays[] puis dessine les secteurs et les titres du camembert
+ * elle convertit tab[]---> data_pourcentage[]={50,12,30} et data_pays={"Paris","Londre","Tokyo"} et dessine
+ * return : rien
+ * param : gdImagePtr *img, char* tab[], int tab_size
+ */
 void dessine(gdImagePtr *img, char* tab[], int tab_size){
 
     int size_data = tab_size / 2;
@@ -89,7 +94,7 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
     int centreY = 500;
 
     //Distance du rayon du camembert en pixel
-    int rayon = 200;
+    int rayon = 500;
     srand(time(NULL));
     printf("------------------------------------------------\n");
     for(int i=0; i<size_data; i++){
@@ -102,7 +107,7 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
 
         //Ajout du nom du pays à côté des parts du camembert (coordonnées polaires)
         int stringAngle= debut + ((fin-debut)/2); //Angle moyen entre debut et fin
-        int stringRayon= rayon-10; //Distance du rayon pour les noms de pays
+        int stringRayon= rayon-150; //Distance du rayon pour les noms de pays
 
         //convertit coordonnée polaire en coordonnée cartésienne
         double stringX= centreX + (stringRayon * cos(stringAngle*M_PI/180));
