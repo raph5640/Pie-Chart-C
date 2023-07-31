@@ -23,10 +23,6 @@ const char *titre = "/home/raphael/pie/pie.png";        //Chemin de l'image ou l
 int main(int argc, char* argv[]) {
 
     char* tab[(argc * 2)-2]; // Notre tableau de valeurs
-    if((argc * 2)-2==0){//On vérifie qu'il y a au moins 1 argument entrée, sinon on arrête le programme
-        printf("WARNING : Vous n'avez entré aucun arguments !!\n");
-        exit(1);
-    }
     gdImagePtr image;    // Notre image
 
     initialise_tableau(argv, argc, tab, sizeof(tab) / sizeof(tab[0]));
@@ -42,9 +38,7 @@ int main(int argc, char* argv[]) {
 }
 
 void dessine(gdImagePtr *img, char* tab[], int tab_size){
-    srand(time(NULL));
 
-    int couleur_random = gdImageColorAllocate(*img, rand() % 256, rand() % 256, rand() % 256);
     int size_data = tab_size / 2;
 
     int data_pourcentage[size_data]; //Tableau data_pourcentage contient tout les pourcentages type (int)
@@ -54,13 +48,14 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
     int l = 0;  //Incrémenteur pour le tableau data_pays
 
     //Initialisation des tableaux data a l'aide du tableau de base exemple: de tab[] = {"Paris","50","Londre","12","Tokyo","30"} vers data_pourcentage[]={50,12,30} et data_pays={"Paris","Londre","Tokyo"}
+
     for (int i = 0; i < tab_size && k < size_data; i++) {
         if (atoi(tab[i]) != 0) {
             data_pourcentage[k] = atoi(tab[i]);
             printf("data_pourcentage[%d]=%d\n", k, data_pourcentage[k]);
             k++;
         }else{
-            data_pays[l] = tab[i];
+            data_pays[l] = strdup(tab[i]);
             printf("data_pays[%d]=%s\n", l, data_pays[l]);
             l++;
         }
@@ -80,9 +75,29 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
         printf("WARNING : La somme des pourcentages entré (%d) est inférieur strictement a 100  !!\n",total_pourcentage);
     }
 
+    //On déssine les parts du gateau
+    int debut =0;
+    int fin =0;
 
-    gdImageFilledArc(*img, 500,500, 200,200, 0,250, couleur_random,gdArc);
+    //Coordonnées du centre du gateau ou camembert
+    int centreX = 500;
+    int centreY = 500;
 
+    //Distance du rayon du camembert en pixel
+    int rayon = 600;
+    srand(time(NULL));
+
+    for(int i=0; i<size_data; i++){
+
+        //DESSIN DES PARTS DE GATEAU
+        int couleur_random = gdImageColorAllocate(*img, rand() % 256, rand() % 256, rand() % 256);      //On génère une nouvelle couleur aléatoire pour chaque part du camembert
+        fin = debut + ((double)data_pourcentage[i]/100)*360;
+        gdImageFilledArc(*img, centreX,centreY, rayon,rayon, debut,fin, couleur_random,gdArc);          //On dessine la part de camembert
+        debut = fin;
+
+        // Ajout du nom du pays à côté des parts du camembert
+
+    }
 }
 
 /* Initialise le tableau (tab) avec les données entrée en arguments lors du lancement du programme avec une commande exemple :tab[] = {"Paris","50","Londre","12","Tokyo","30"}
@@ -91,6 +106,11 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
  * param : char* argv[], int argc, char* tab[], int tab_size
  */
 void initialise_tableau(char* argv[], int argc, char* tab[], int tab_size) {
+    if((argc * 2)-2==0){//On vérifie qu'il y a au moins 1 argument entrée, sinon on arrête le programme
+        printf("WARNING : Vous n'avez entré aucun arguments !!\n");
+        exit(1);
+    }
+
     for (int i = 0; i < tab_size; i++) {
         tab[i] = NULL;
     }
