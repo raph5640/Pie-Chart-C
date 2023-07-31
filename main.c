@@ -11,10 +11,10 @@
 //Déclaration des fonctions ici
 void initialise_tableau(char* argv[], int argc, char* tab[], int tab_size);
 void initialise_image(gdImagePtr *img);
-void dessine(gdImagePtr *img, char* tab[]);
+void dessine(gdImagePtr *img, char* tab[], int tab_size);
 void telecharge_image(gdImagePtr img);
-void affiche_tab(char* tab[]);
-void clean(char* tab[]);
+void affiche_tab(char* tab[], int tab_size);
+void clean(char* tab[],int size);
 //voir la déclaration et la documentations de ces fonction a partir de la ligne 44
 
 const char *separator = "=:";
@@ -22,25 +22,35 @@ const char *titre = "/home/raphael/pie/pie.png";
 
 int main(int argc, char* argv[]) {
 
-    char* tab[strlen(*argv)*2];//Notre tableau de valeurs
-    gdImagePtr image;//Notre image
+    char* tab[argc * 2]; // Notre tableau de valeurs
+    gdImagePtr image;    // Notre image
 
-    initialise_tableau(argv, argc, tab, strlen(*argv)*2);
+    initialise_tableau(argv, argc, tab, sizeof(tab) / sizeof(tab[0]));
     initialise_image(&image);
 
-    affiche_tab(tab);
-    dessine(&image,tab);
+    affiche_tab(tab, sizeof(tab) / sizeof(tab[0]));
+    dessine(&image, tab, sizeof(tab)/sizeof(tab[0]));
 
-
-    //Telechargement de l'image et libération de la mémoire (image/tableaux/pointeurs)
+    // Téléchargement de l'image et libération de la mémoire (image/tableaux/pointeurs)
     telecharge_image(image);
-    clean(tab);
+    clean(tab, sizeof(tab) / sizeof(tab[0]));
     return 0;
 }
 
-void dessine(gdImagePtr *img, char* tab[]){
-    srand( time( NULL ) );
-    int couleur_random = gdImageColorAllocate(*img, rand()%256, rand()%256, rand()%256);
+void dessine(gdImagePtr *img, char* tab[], int tab_size){
+    srand(time(NULL));
+    int couleur_random = gdImageColorAllocate(*img, rand() % 256, rand() % 256, rand() % 256);
+
+    int size_data = tab_size / 2;
+    int data[size_data];
+    int k = 0;
+    for (int i = 0; i < tab_size && k < size_data-1; i++) {
+        if (atoi(tab[i]) != 0) {
+            data[k] = atoi(tab[i]);
+            printf("data[%d]=%d\n", k, data[k]);
+            k++;
+        }
+    }
     gdImageFilledArc(*img, 500, 500, 500,500,100,200,couleur_random, gdArc);
 }
 
@@ -49,12 +59,16 @@ void dessine(gdImagePtr *img, char* tab[]){
  * return : rien
  * param : char* argv[], int argc, char* tab[], int tab_size
  */
-void initialise_tableau(char* argv[], int argc, char* tab[], int tab_size){
+void initialise_tableau(char* argv[], int argc, char* tab[], int tab_size) {
+    for (int i = 0; i < tab_size; i++) {
+        tab[i] = NULL;
+    }
+
     int k = 0;
     for (int i = 0; i < argc && k < tab_size; i++) {
         char* strtoken = strtok(argv[i], separator);
         while (strtoken != NULL && k < tab_size) {
-            tab[k] = strdup(strtoken);      //Alloue la mémoire pour chaque case du tableau et insere sa valeur dedans
+            tab[k] = strdup(strtoken);      //Alloue la mémoire pour les chaines de caracteres a initialiser dans le tableau de valeur et initialise la valeur
             k++;
             strtoken = strtok(NULL, separator);
         }
@@ -89,9 +103,9 @@ void telecharge_image(gdImagePtr img){
     gdImageDestroy(img); //Destruction de l'image ici (liberation de la memoire)
 }
 
-void affiche_tab(char* tab[]){
-    for(int i=0;i<strlen(*tab) && tab[i]!=NULL;i++){
-        printf("%s\n",tab[i]);
+void affiche_tab(char* tab[], int tab_size) {
+    for (int i = 0; i < tab_size && tab[i] != NULL; i++) {
+        printf("%s\n", tab[i]);
     }
 }
 
@@ -100,8 +114,9 @@ void affiche_tab(char* tab[]){
  * return : rien
  * param : aucun
  */
-void clean(char* tab[]){
-    for(int i=0; i<strlen(*tab) && tab[i]!=NULL;i++){
+void clean(char* tab[], int tab_size){
+    for(int i=0; i<tab_size && tab[i]!=NULL;i++){
         free(tab[i]);
     }
+    return;
 }
