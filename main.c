@@ -53,7 +53,7 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
 
     int k = 0;  //Incrémenteur pour le tableau data_pourcentage
     int l = 0;  //Incrémenteur pour le tableau data_pays
-
+    printf("------------------------------------------------\n");
     for (int i = 0; i < tab_size && k < size_data; i++) {
         if (atoi(tab[i]) != 0) {
             data_pourcentage[k] = atoi(tab[i]);
@@ -89,9 +89,9 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
     int centreY = 500;
 
     //Distance du rayon du camembert en pixel
-    int rayon = 600;
+    int rayon = 200;
     srand(time(NULL));
-
+    printf("------------------------------------------------\n");
     for(int i=0; i<size_data; i++){
 
         //DESSIN DES PARTS DE GATEAU
@@ -101,18 +101,22 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
         debut = fin;
 
         //Ajout du nom du pays à côté des parts du camembert (coordonnées polaires)
-        int stringAngle= (debut + fin) / 2; //Angle moyen entre debut et fin
-        int stringRayon= rayon + 800; //Distance du rayon pour les noms de pays
+        int stringAngle= debut + ((fin-debut)/2); //Angle moyen entre debut et fin
+        int stringRayon= rayon-10; //Distance du rayon pour les noms de pays
 
         //convertit coordonnée polaire en coordonnée cartésienne
-        int stringX= centreX + (stringRayon * cos(stringAngle*M_PI/180));
-        int stringY= centreY + (stringRayon * sin(stringAngle*M_PI/180));
+        double stringX= centreX + (stringRayon * cos(stringAngle*M_PI/180));
+        double stringY= centreY + (stringRayon * sin(stringAngle*M_PI/180));
 
         int black = gdImageColorAllocate(*img, 0, 0, 0);
 
         // Dessiner le texte à côté des parts du camembert en utilisant gdImageString
+        printf("%s_angle=%d\n",data_pays[i],stringAngle);
+        printf("%s_X=%lf\n",data_pays[i],stringX);
+        printf("%s_Y=%lf\n",data_pays[i],stringY);
+        printf("\n");
         gdFontPtr smallFont = gdFontGetGiant();
-        gdImageString(*img, smallFont, 10*(i*10), 10, (unsigned char*)data_pays[i], black);
+        gdImageString(*img, smallFont, stringX, stringY, (unsigned char*)data_pays[i], black);
     }
     //Libération de la mémoire
     for (int i = 0; i < size_data; i++) {
