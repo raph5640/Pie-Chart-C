@@ -23,7 +23,10 @@ const char *titre = "/home/raphael/pie/pie.png";        //Chemin de l'image ou l
 int main(int argc, char* argv[]) {
 
     char* tab[(argc * 2)-2]; // Notre tableau de valeurs
-    printf("taille tab=%d\n",(argc * 2)-2);
+    if((argc * 2)-2==0){//On vérifie qu'il y a au moins 1 argument entrée, sinon on arrête le programme
+        printf("WARNING : Vous n'avez entré aucun arguments !!\n");
+        exit(1);
+    }
     gdImagePtr image;    // Notre image
 
     initialise_tableau(argv, argc, tab, sizeof(tab) / sizeof(tab[0]));
@@ -40,15 +43,17 @@ int main(int argc, char* argv[]) {
 
 void dessine(gdImagePtr *img, char* tab[], int tab_size){
     srand(time(NULL));
-    int couleur_random = gdImageColorAllocate(*img, rand() % 256, rand() % 256, rand() % 256);
 
+    int couleur_random = gdImageColorAllocate(*img, rand() % 256, rand() % 256, rand() % 256);
     int size_data = tab_size / 2;
-    printf("data_size=%d\n",size_data);
+
     int data_pourcentage[size_data]; //Tableau data_pourcentage contient tout les pourcentages type (int)
     char* data_pays[size_data];      //Tableau data_pays contient tout les noms de pays type (char*)
-    int k = 0;
-    int l = 0;
-    //Initialisation du tableau data a l'aide du tableau de base exemple: de tab[] = {"Paris","50","Londre","12","Tokyo","30"} vers data[]={50,12,30}
+
+    int k = 0;  //Incrémenteur pour le tableau data_pourcentage
+    int l = 0;  //Incrémenteur pour le tableau data_pays
+
+    //Initialisation des tableaux data a l'aide du tableau de base exemple: de tab[] = {"Paris","50","Londre","12","Tokyo","30"} vers data_pourcentage[]={50,12,30} et data_pays={"Paris","Londre","Tokyo"}
     for (int i = 0; i < tab_size && k < size_data; i++) {
         if (atoi(tab[i]) != 0) {
             data_pourcentage[k] = atoi(tab[i]);
@@ -60,8 +65,24 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
             l++;
         }
     }
+
+    //Vérification des conditions sur les pourcentages pour éviter que les pourcentages soient supérieur strict a 100
+    int total_pourcentage=0;
+    for(int i=0; i<size_data; i++){
+        total_pourcentage+=data_pourcentage[i];
+    }
+
+    if(total_pourcentage>100){  //Si la somme des pourcentages est supérieur strict a 100 on ne crée pas d'image et on exit avec une erreur 1
+        printf("WARNING : La somme des pourcentages entré (%d) est supérieur strictement a 100  !!\n",total_pourcentage);
+        printf("!!L'image n'a pas été crée!!");
+        exit(1);
+    }else if(total_pourcentage<100){    //On crée quand meme l'image et on complete les pourcentage avec le pays "LE FAMEUX PAYS IMAGINAIRE"
+        printf("WARNING : La somme des pourcentages entré (%d) est inférieur strictement a 100  !!\n",total_pourcentage);
+    }
+
+
     gdImageFilledArc(*img, 500,500, 200,200, 0,250, couleur_random,gdArc);
-    //Fin de l'Initialisation du tableau data a l'aide du tableau de base
+
 }
 
 /* Initialise le tableau (tab) avec les données entrée en arguments lors du lancement du programme avec une commande exemple :tab[] = {"Paris","50","Londre","12","Tokyo","30"}
