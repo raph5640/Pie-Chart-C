@@ -121,6 +121,7 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
         printf("%s_Y=%lf\n",data_pays[i],stringY);
         printf("\n");
         gdFontPtr smallFont = gdFontGetGiant();
+        gdImageLine(*img, centreX, centreY, stringX+5, stringY+5, couleur_random);
         gdImageString(*img, smallFont, stringX, stringY, (unsigned char*)data_pays[i], black);
         debut = fin;
     }
