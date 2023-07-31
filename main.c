@@ -3,6 +3,7 @@
 #include <string.h>
 #include <gd.h>
 #include <math.h>
+#include <gdfontg.h>
 #include <time.h>
 /* @auteur Raphael De Oliveira
  * PROJET PIE CHART réalisé par @auteur
@@ -41,13 +42,17 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
 
     int size_data = tab_size / 2;
 
-    int data_pourcentage[size_data]; //Tableau data_pourcentage contient tout les pourcentages type (int)
-    char* data_pays[size_data];      //Tableau data_pays contient tout les noms de pays type (char*)
+    int data_pourcentage[size_data]; // Tableau data_pourcentage contient tous les pourcentages (type int)
+    char* data_pays[size_data];      // Tableau data_pays contient tous les noms de pays (type char*)
+
+    for(int i=0; i<size_data; i++){
+        data_pays[i] = strdup("");
+    }
+    // Initialisation des tableaux data à l'aide du tableau de base exemple:
+    // de tab[] = {"Paris","50","Londre","12","Tokyo","30"} vers data_pourcentage[]={50,12,30} et data_pays={"Paris","Londre","Tokyo"}
 
     int k = 0;  //Incrémenteur pour le tableau data_pourcentage
     int l = 0;  //Incrémenteur pour le tableau data_pays
-
-    //Initialisation des tableaux data a l'aide du tableau de base exemple: de tab[] = {"Paris","50","Londre","12","Tokyo","30"} vers data_pourcentage[]={50,12,30} et data_pays={"Paris","Londre","Tokyo"}
 
     for (int i = 0; i < tab_size && k < size_data; i++) {
         if (atoi(tab[i]) != 0) {
@@ -55,7 +60,7 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
             printf("data_pourcentage[%d]=%d\n", k, data_pourcentage[k]);
             k++;
         }else{
-            data_pays[l] = tab[i];
+            data_pays[l]=strdup(tab[i]);
             printf("data_pays[%d]=%s\n", l, data_pays[l]);
             l++;
         }
@@ -97,7 +102,7 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
 
         //Ajout du nom du pays à côté des parts du camembert (coordonnées polaires)
         int stringAngle= (debut + fin) / 2; //Angle moyen entre debut et fin
-        int stringRayon= rayon + 50; //Distance du rayon pour les noms de pays
+        int stringRayon= rayon + 800; //Distance du rayon pour les noms de pays
 
         //convertit coordonnée polaire en coordonnée cartésienne
         int stringX= centreX + (stringRayon * cos(stringAngle*M_PI/180));
@@ -106,8 +111,12 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
         int black = gdImageColorAllocate(*img, 0, 0, 0);
 
         // Dessiner le texte à côté des parts du camembert en utilisant gdImageString
-        //gdFontPtr smallFont = gdFontGetSmall();
-        //gdImageString(*img, smallFont, stringX, stringY, (unsigned char*)data_pays[i], black);
+        gdFontPtr smallFont = gdFontGetGiant();
+        gdImageString(*img, smallFont, 10*(i*10), 10, (unsigned char*)data_pays[i], black);
+    }
+    //Libération de la mémoire
+    for (int i = 0; i < size_data; i++) {
+        free(data_pays[i]);
     }
 }
 
