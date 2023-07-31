@@ -55,7 +55,7 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
             printf("data_pourcentage[%d]=%d\n", k, data_pourcentage[k]);
             k++;
         }else{
-            data_pays[l] = strdup(tab[i]);
+            data_pays[l] = tab[i];
             printf("data_pays[%d]=%s\n", l, data_pays[l]);
             l++;
         }
@@ -96,18 +96,18 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
         debut = fin;
 
         //Ajout du nom du pays à côté des parts du camembert (coordonnées polaires)
-        int stringAngle = (debut + fin) / 2; //Angle moyen entre debut et fin
-        int stringRayon = rayon + 50; //Distance du rayon pour les noms de pays
+        int stringAngle= (debut + fin) / 2; //Angle moyen entre debut et fin
+        int stringRayon= rayon + 50; //Distance du rayon pour les noms de pays
 
         //convertit coordonnée polaire en coordonnée cartésienne
-        int stringX = centreX + (stringRayon * cos(stringAngle * M_PI / 180));
-        int stringY = centreY + (stringRayon * sin(stringAngle * M_PI / 180));
+        int stringX= centreX + (stringRayon * cos(stringAngle*M_PI/180));
+        int stringY= centreY + (stringRayon * sin(stringAngle*M_PI/180));
 
         int black = gdImageColorAllocate(*img, 0, 0, 0);
 
         // Dessiner le texte à côté des parts du camembert en utilisant gdImageString
-
-        //gdImageString(*img, gdFontGetSmall(), stringX, stringY, (unsigned char*)data_pays[i], black);
+        //gdFontPtr smallFont = gdFontGetSmall();
+        //gdImageString(*img, smallFont, stringX, stringY, (unsigned char*)data_pays[i], black);
     }
 }
 
