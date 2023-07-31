@@ -30,17 +30,28 @@ void affiche_tab(char* tab[]){
         printf("%s\n",tab[i]);
     }
 }
+void telecharge_image(gdImagePtr *image){
+    FILE *fichier;
+    fichier = fopen("/home/raphael/pie/pie.png", "wb");
+    gdImagePng(image, fichier);
+    fclose(fichier);
+    gdImageDestroy(image);
+}
 int main(int argc, char* argv[]) {
     const int tab_size= strlen(*argv)*2;
     char* tab[tab_size];
 
     initialise(argv, argc, tab, tab_size);
 
-    gdImagePtr image = gdImageCreate(800, 600);
+    gdImagePtr image = gdImageCreate(1000, 1000);
     int red = gdImageColorAllocate(image, 255, 0, 0);
     int green = gdImageColorAllocate(image, 0, 255, 0);
     int blue = gdImageColorAllocate(image, 0, 0, 255);
+
+    gdImageLine(image, 1000, 0, 0, 1000, blue);
+
     affiche_tab(tab);
+    telecharge_image(image);
     clean(tab);
     return 0;
 }
