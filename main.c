@@ -69,7 +69,7 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
 
     if(total_pourcentage>100){  //Si la somme des pourcentages est supérieur strict a 100 on ne crée pas d'image et on exit avec une erreur 1
         printf("WARNING : La somme des pourcentages entré (%d) est supérieur strictement a 100  !!\n",total_pourcentage);
-        printf("!!L'image n'a pas été crée!!");
+        printf("!!L'image n'a pas été crée!!\n");
         exit(1);
     }else if(total_pourcentage<100){    //On crée quand meme l'image et on complete les pourcentage avec le pays "LE FAMEUX PAYS IMAGINAIRE"
         printf("WARNING : La somme des pourcentages entré (%d) est inférieur strictement a 100  !!\n",total_pourcentage);
@@ -95,8 +95,19 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
         gdImageFilledArc(*img, centreX,centreY, rayon,rayon, debut,fin, couleur_random,gdArc);          //On dessine la part de camembert
         debut = fin;
 
-        // Ajout du nom du pays à côté des parts du camembert
+        //Ajout du nom du pays à côté des parts du camembert (coordonnées polaires)
+        int stringAngle = (debut + fin) / 2; //Angle moyen entre debut et fin
+        int stringRayon = rayon + 50; //Distance du rayon pour les noms de pays
 
+        //convertit coordonnée polaire en coordonnée cartésienne
+        int stringX = centreX + (stringRayon * cos(stringAngle * M_PI / 180));
+        int stringY = centreY + (stringRayon * sin(stringAngle * M_PI / 180));
+
+        int black = gdImageColorAllocate(*img, 0, 0, 0);
+
+        // Dessiner le texte à côté des parts du camembert en utilisant gdImageString
+
+        //gdImageString(*img, gdFontGetSmall(), stringX, stringY, (unsigned char*)data_pays[i], black);
     }
 }
 
