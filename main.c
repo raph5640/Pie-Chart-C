@@ -13,28 +13,35 @@
 void initialise_tableau(char* argv[], int argc, char* tab[], int tab_size);
 void initialise_image(gdImagePtr *img);
 void dessine(gdImagePtr *img, char* tab[], int tab_size);
-void telecharge_image(gdImagePtr img);
+void telecharge_image(gdImagePtr img, int wich);
 void affiche_tab(char* tab[], int tab_size);
-void clean(char* tab[],int size);
+void clean(char* tab[], int tab_size, gdImagePtr img);
+void dessine_histogramme(gdImagePtr *img, char* tab[], int tab_size);
 //voir la déclaration et la documentations de ces fonction a partir de la ligne 44
 
 const char *separator = "=:";                           //les séparateurs possibles pour les arguments lors du lancement du programme
-const char *titre = "/home/raphael/pie/pie.png";        //Chemin de l'image ou l'on souhaite qu'elle soit crée
+const char *titre_pie = "/home/raphael/pie/image_repository/pie.png";        //Chemin de l'image ou l'on souhaite qu'elle soit crée
+const char *titre_histo = "/home/raphael/pie/image_repository/histogram.png";
 
 int main(int argc, char* argv[]) {
 
     char* tab[(argc * 2)-2]; // Notre tableau de valeurs
-    gdImagePtr image;    // Notre image
+    gdImagePtr image;       //Notre image pie
+    gdImagePtr image_histo; //Notre image histogramme
 
     initialise_tableau(argv, argc, tab, sizeof(tab) / sizeof(tab[0]));
-    initialise_image(&image);
-
     affiche_tab(tab, sizeof(tab) / sizeof(tab[0]));
-    dessine(&image, tab, sizeof(tab)/sizeof(tab[0]));
+
+    initialise_image(&image);       //Crée l'objet image et met un fond blanc
+    initialise_image(&image_histo); //Crée l'objet image histogramme et met un fond blanc
+
+    dessine(&image, tab, sizeof(tab)/sizeof(tab[0]));   //Dessine le pie chart dans l'objet image
+    dessine_histogramme(&image_histo, tab, sizeof(tab)/sizeof(tab[0]));
 
     // Téléchargement de l'image et libération de la mémoire (image/tableaux/pointeurs)
-    telecharge_image(image);
-    clean(tab, sizeof(tab) / sizeof(tab[0]));
+    telecharge_image(image,0);  //Télécharge l'image
+    telecharge_image(image_histo,1);
+    clean(tab, sizeof(tab) / sizeof(tab[0]),image); //Libération de mémoire pointeur+
     return 0;
 }
 
@@ -131,6 +138,81 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
     }
 }
 
+/* Fonction dessine_histogramme : dessine un histogramme à partir du tableau data_pourcentage[]
+ * return : rien
+ * param : gdImagePtr *img, int data_pourcentage[], int size_data
+ */
+void dessine_histogramme(gdImagePtr *img, char* tab[], int tab_size) {
+
+    int size_data = tab_size / 2;
+
+    int data_pourcentage[size_data]; // Tableau data_pourcentage contient tous les pourcentages (type int)
+    char* data_pays[size_data];      // Tableau data_pays contient tous les noms de pays (type char*)
+
+    for(int i=0; i<size_data; i++){
+        data_pays[i] = strdup("");
+    }
+    // Initialisation des tableaux data à l'aide du tableau de base exemple:
+    // de tab[] = {"Paris","50","Londre","12","Tokyo","30"} vers data_pourcentage[]={50,12,30} et data_pays={"Paris","Londre","Tokyo"}
+
+    int k = 0;  //Incrémenteur pour le tableau data_pourcentage
+    int l = 0;  //Incrémenteur pour le tableau data_pays
+    printf("------------------------------------------------\n");
+    for (int i = 0; i < tab_size && k < size_data; i++) {
+        if (atoi(tab[i]) != 0) {
+            data_pourcentage[k] = atoi(tab[i]);
+            printf("data_pourcentage[%d]=%d\n", k, data_pourcentage[k]);
+            k++;
+        }else{
+            data_pays[l]=strdup(tab[i]);
+            printf("data_pays[%d]=%s\n", l, data_pays[l]);
+            l++;
+        }
+    }
+    //Coordonnées de départ de l'histogramme
+    int startX = 100;
+    int startY = 900;
+
+    //Largeur et hauteur d'une barre de l'histogramme
+    int barWidth = 150;
+    int maxBarHeight = 800; // Hauteur maximale de la barre
+
+    //Couleurs
+    int white = gdImageColorAllocate(*img, 255, 255, 255);
+    int black = gdImageColorAllocate(*img, 0, 0, 0);
+
+    // Dessine un fond blanc pour l'histogramme
+    gdImageFilledRectangle(*img, 0, 0, 999, 999, white);
+
+    // Dessine les barres de l'histogramme
+    for (int i = 0; i < size_data; i++) {
+        int barHeight = (int)(((double)data_pourcentage[i] / 100) * maxBarHeight)*2;
+
+        int x1 = startX + i * barWidth;
+        int y1 = startY - barHeight;
+        int x2 = x1 + barWidth - 1;
+        int y2 = startY - 1;
+
+        int couleur_random = gdImageColorAllocate(*img, rand() % 256, rand() % 256, rand() % 256);
+        gdImageFilledRectangle(*img, x1, y1, x2, y2, couleur_random);
+
+        // Dessine le texte indiquant la valeur de la barre
+        char valeur[10];
+        snprintf(valeur, sizeof(valeur), "%d", data_pourcentage[i]);
+        int texteX = x1 + barWidth / 2 - 10;
+        int texteY = y1 - 20;
+        gdFontPtr smallFont = gdFontGetGiant();
+        gdImageString(*img, smallFont, texteX, texteY, (unsigned char *)valeur, black);
+
+        // Dessine le nom du pays en dessous de la barre
+        int nomX = x1 + barWidth / 2 - (strlen(data_pays[i]) * 3); // Ajustement pour centrer le texte sous la barre
+        int nomY = startY + 10;
+        gdFontPtr mediumBoldFont = gdFontGetGiant();
+        gdImageString(*img, mediumBoldFont, nomX, nomY, (unsigned char *)data_pays[i], black);
+    }
+}
+
+
 /* Initialise le tableau (tab) avec les données entrée en arguments lors du lancement du programme avec une commande exemple :tab[] = {"Paris","50","Londre","12","Tokyo","30"}
  * elle initialise les valeurs de tab[]
  * return : rien
@@ -177,12 +259,15 @@ void initialise_image(gdImagePtr *img){
  * return : rien
  * param : gdImagePtr
  */
-void telecharge_image(gdImagePtr img){
+void telecharge_image(gdImagePtr img,int wich){
     FILE *fichier;
-    fichier = fopen(titre, "wb");
+    if(wich==0){
+        fichier = fopen(titre_pie, "wb");
+    }else if(wich==1){
+        fichier = fopen(titre_histo, "wb");
+    }
     gdImagePng(img, fichier);
     fclose(fichier);
-    gdImageDestroy(img); //Destruction de l'image ici (liberation de la memoire)
 }
 
 void affiche_tab(char* tab[], int tab_size) {
@@ -196,9 +281,10 @@ void affiche_tab(char* tab[], int tab_size) {
  * return : rien
  * param : char* tab[], int tab_size
  */
-void clean(char* tab[], int tab_size){
+void clean(char* tab[], int tab_size, gdImagePtr img){
     for(int i=0; i<tab_size && tab[i]!=NULL;i++){
         free(tab[i]);
     }
+    gdImageDestroy(img); //Destruction de l'image ici (liberation de la memoire)
     return;
 }
