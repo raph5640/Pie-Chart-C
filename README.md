@@ -1,7 +1,8 @@
 # pie
 @author Raphael De Oliveira
 
-Compile the main.c with the command gcc -o pie main.c -lgd -lm and execute with ./pie Tokyo=20 Londre:18  UnitedStates=12 Paris:30
+Compile the main.c with the command : gcc -o pie main.c -lgd -lm 
+execute with the command : ./pie Tokyo=20 Londre:18  UnitedStates=12 Paris:30
 
 1) Launch the program pie using a terminal with the following command: ./pie Tokyo=20 London:18 UnitedStates=12 Paris:12
 2) You must provide arguments to the program in the following format: string<separator>integer string<separator>integer string<separator>integer
