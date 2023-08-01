@@ -104,7 +104,6 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
         fin = debut + ((double)data_pourcentage[i]/100)*360;
         gdImageFilledArc(*img, centreX,centreY, rayon,rayon, debut,fin, couleur_random,gdArc);          //On dessine la part de camembert
 
-
         //Ajout du nom du pays à côté des parts du camembert (coordonnées polaires)
         int stringAngle= debut + ((fin-debut)/2); //Angle moyen entre debut et fin
         int stringRayon= (rayon/2)+50; //Distance du rayon pour les noms de pays
@@ -125,6 +124,7 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
         gdImageString(*img, smallFont, stringX, stringY, (unsigned char*)data_pays[i], black);
         debut = fin;
     }
+
     //Libération de la mémoire
     for (int i = 0; i < size_data; i++) {
         free(data_pays[i]);
