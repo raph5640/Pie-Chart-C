@@ -15,7 +15,7 @@ void initialise_image(gdImagePtr *img);
 void dessine(gdImagePtr *img, char* tab[], int tab_size);
 void telecharge_image(gdImagePtr img, int wich);
 void affiche_tab(char* tab[], int tab_size);
-void clean(char* tab[], int tab_size, gdImagePtr img);
+void clean(char* tab[], int tab_size, gdImagePtr img1,gdImagePtr img2);
 void dessine_histogramme(gdImagePtr *img, char* tab[], int tab_size);
 //voir la déclaration et la documentations de ces fonction a partir de la ligne 44
 
@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
     // Téléchargement de l'image et libération de la mémoire (image/tableaux/pointeurs)
     telecharge_image(image,0);  //Télécharge l'image pie
     telecharge_image(image_histo,1); //Télécharge l'image histogramme
-    clean(tab, sizeof(tab) / sizeof(tab[0]),image); //Libération de mémoire pointeur+
+    clean(tab, sizeof(tab) / sizeof(tab[0]),image,image_histo); //Libération de mémoire pointeur+
     return 0;
 }
 
@@ -281,10 +281,11 @@ void affiche_tab(char* tab[], int tab_size) {
  * return : rien
  * param : char* tab[], int tab_size
  */
-void clean(char* tab[], int tab_size, gdImagePtr img){
+void clean(char* tab[], int tab_size, gdImagePtr img1, gdImagePtr img2){
     for(int i=0; i<tab_size && tab[i]!=NULL;i++){
         free(tab[i]);
     }
-    gdImageDestroy(img); //Destruction de l'image ici (liberation de la memoire)
+    gdImageDestroy(img1); //Destruction de l'image ici (liberation de la memoire)
+    gdImageDestroy(img2);
     return;
 }
