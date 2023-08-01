@@ -22,6 +22,7 @@ void dessine_histogramme(gdImagePtr *img, char* tab[], int tab_size);
 const char *separator = "=:";                                                //les séparateurs possibles pour les arguments lors du lancement du programme
 const char *titre_pie = "./image_repository/pie.png";        //Chemin de l'image pie ou l'on souhaite qu'elle soit crée
 const char *titre_histo = "./image_repository/histogram.png";//Chemin de l'image histogramme ou l'on souhaite qu'elle soit crée
+int fond;   //fond = 1 si le fond d'écran est blanc / fond =2 si le fond d'écran est noir
 
 int main(int argc, char* argv[]) {
 
@@ -104,6 +105,10 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
     int rayon = 500;
     srand(time(NULL));
     printf("------------------------------------------------\n");
+    //Couleurs
+    int white = gdImageColorAllocate(*img, 255, 255, 255);
+    int black = gdImageColorAllocate(*img, 0, 0, 0);
+
     for(int i=0; i<size_data; i++){
 
         //DESSIN DES PARTS DE GATEAU
@@ -119,8 +124,6 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
         double stringX= centreX + (stringRayon * cos(stringAngle*M_PI/180));
         double stringY= centreY + (stringRayon * sin(stringAngle*M_PI/180));
 
-        int black = gdImageColorAllocate(*img, 0, 0, 0);
-
         // Dessiner le texte à côté des parts du camembert en utilisant gdImageString
         printf("%s_angle=%d\n",data_pays[i],stringAngle);
         printf("%s_X=%lf\n",data_pays[i],stringX);
@@ -128,7 +131,11 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
         printf("\n");
         gdFontPtr smallFont = gdFontGetGiant();
         gdImageLine(*img, centreX, centreY, stringX+5, stringY+5, couleur_random);
-        gdImageString(*img, smallFont, stringX, stringY, (unsigned char*)data_pays[i], black);
+        if(fond==1){
+            gdImageString(*img, smallFont, stringX, stringY, (unsigned char*)data_pays[i], black);      //Met le texte en noir si le fond est blanc
+        }else{
+            gdImageString(*img, smallFont, stringX, stringY, (unsigned char*)data_pays[i], white);      //Met le texte en blanc si le fond est noir
+        }
         debut = fin;
     }
 
@@ -181,9 +188,6 @@ void dessine_histogramme(gdImagePtr *img, char* tab[], int tab_size) {
     int white = gdImageColorAllocate(*img, 255, 255, 255);
     int black = gdImageColorAllocate(*img, 0, 0, 0);
 
-    // Dessine un fond blanc pour l'histogramme
-    gdImageFilledRectangle(*img, 0, 0, 999, 999, white);
-
     // Dessine les barres de l'histogramme
     for (int i = 0; i < size_data; i++) {
         int barHeight = (int)(((double)data_pourcentage[i] / 100) * maxBarHeight)*2;
@@ -202,13 +206,22 @@ void dessine_histogramme(gdImagePtr *img, char* tab[], int tab_size) {
         int texteX = x1 + barWidth / 2 - 10;
         int texteY = y1 - 20;
         gdFontPtr smallFont = gdFontGetGiant();
-        gdImageString(*img, smallFont, texteX, texteY, (unsigned char *)valeur, black);
+        if(fond ==1){
+            gdImageString(*img, smallFont, texteX, texteY, (unsigned char *)valeur, black);
+        }else{
+            gdImageString(*img, smallFont, texteX, texteY, (unsigned char *)valeur, white);
+        }
 
         // Dessine le nom du pays en dessous de la barre
         int nomX = x1 + barWidth / 2 - (strlen(data_pays[i]) * 3); // Ajustement pour centrer le texte sous la barre
         int nomY = startY + 10;
         gdFontPtr mediumBoldFont = gdFontGetGiant();
-        gdImageString(*img, mediumBoldFont, nomX, nomY, (unsigned char *)data_pays[i], black);
+        if(fond==1){
+            gdImageString(*img, mediumBoldFont, nomX, nomY, (unsigned char *)data_pays[i], black);      //Met le text en noir si le fond est blanc
+        }else{
+            gdImageString(*img, mediumBoldFont, nomX, nomY, (unsigned char *)data_pays[i], white);      //Met le text en blanc si le fond est noir
+        }
+
     }
     //Libération de la mémoire pour ce tableau data_pays ephémere
     for (int i = 0; i < size_data; i++) {
@@ -249,12 +262,26 @@ void initialise_tableau(char* argv[], int argc, char* tab[], int tab_size) {
  * param : gdImagePtr
  */
 void initialise_image(gdImagePtr *img){
-
     *img = gdImageCreate(1000, 1000);
     //definition des couleurs
     int white = gdImageColorAllocate(*img,255,255,255);
+    int black = gdImageColorAllocate(*img,0,0,0);
+
+    //Choix de couleur du fond d'écran (noir ou blanc)
+    int x=0;
+    printf("Fond d'écran en blanc ou en noir :\nTaper 1 : Fond d'écran en blanc\nTaper 2 : Fond d'écran en noir\n");
+    scanf("%d",&x);
+    while(x!=1 && x!=2){
+        printf("Fond d'écran en blanc ou en noir :\nTaper 1 : Fond d'écran en blanc\nTaper 2 : Fond d'écran en noir\n");
+        scanf("%d",&x);
+    }
     //création de formes
-    gdImageFilledRectangle(*img, 0,0, 999 ,999,white);  //Met le fond en blanc
+    if(x==1){
+        gdImageFilledRectangle(*img, 0,0, 999 ,999,white);  //Met le fond en blanc
+    }else if(x==2){
+        gdImageFilledRectangle(*img, 0,0, 999 ,999,black);  //Met le fond en noir
+    }
+    fond = x;
 
 }
 
