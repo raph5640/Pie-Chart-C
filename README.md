@@ -1,11 +1,11 @@
 # Project PROGRAMMATION C : Pie Chart
 Project PROGRAMMATION C : Pie Chart by @author Raphael De Oliveira
 
-## Install GDLib
+## Install GDLib (Linux Debian)
 
 Install the GD library (Graphic Draw) using the command: sudo apt install libgd-dev (Linux)
 
-## How to
+## How to (Linux)
 
 1)  Clone this git with the command : git clone https://github.com/raph5640/pie
 2)  Go into pie directory with the command : cd ./pie
