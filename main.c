@@ -19,13 +19,13 @@ void clean(char* tab[], int tab_size, gdImagePtr img);
 void dessine_histogramme(gdImagePtr *img, char* tab[], int tab_size);
 //voir la déclaration et la documentations de ces fonction a partir de la ligne 44
 
-const char *separator = "=:";                           //les séparateurs possibles pour les arguments lors du lancement du programme
-const char *titre_pie = "/home/raphael/pie/image_repository/pie.png";        //Chemin de l'image ou l'on souhaite qu'elle soit crée
-const char *titre_histo = "/home/raphael/pie/image_repository/histogram.png";
+const char *separator = "=:";                                                //les séparateurs possibles pour les arguments lors du lancement du programme
+const char *titre_pie = "/home/raphael/pie/image_repository/pie.png";        //Chemin de l'image pie ou l'on souhaite qu'elle soit crée
+const char *titre_histo = "/home/raphael/pie/image_repository/histogram.png";//Chemin de l'image histogramme ou l'on souhaite qu'elle soit crée
 
 int main(int argc, char* argv[]) {
 
-    char* tab[(argc * 2)-2]; // Notre tableau de valeurs
+    char* tab[(argc * 2)-2]; //Notre tableau de valeurs
     gdImagePtr image;       //Notre image pie
     gdImagePtr image_histo; //Notre image histogramme
 
@@ -39,8 +39,8 @@ int main(int argc, char* argv[]) {
     dessine_histogramme(&image_histo, tab, sizeof(tab)/sizeof(tab[0]));
 
     // Téléchargement de l'image et libération de la mémoire (image/tableaux/pointeurs)
-    telecharge_image(image,0);  //Télécharge l'image
-    telecharge_image(image_histo,1);
+    telecharge_image(image,0);  //Télécharge l'image pie
+    telecharge_image(image_histo,1); //Télécharge l'image histogramme
     clean(tab, sizeof(tab) / sizeof(tab[0]),image); //Libération de mémoire pointeur+
     return 0;
 }
@@ -138,7 +138,7 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
     }
 }
 
-/* Fonction dessine_histogramme : dessine un histogramme à partir du tableau data_pourcentage[]
+/* Fonction dessine_histogramme : dessine un histogramme à partir du tableau tab[]
  * return : rien
  * param : gdImagePtr *img, int data_pourcentage[], int size_data
  */
