@@ -190,7 +190,7 @@ void dessine_histogramme(gdImagePtr *img, char* tab[], int tab_size) {
 
     // Dessine les barres de l'histogramme
     for (int i = 0; i < size_data; i++) {
-        int barHeight = (int)(((double)data_pourcentage[i] / 100) * maxBarHeight)*2;
+        int barHeight = (int)(((double)data_pourcentage[i] / 100) * maxBarHeight);
 
         int x1 = startX + i * barWidth;
         int y1 = startY - barHeight;
@@ -269,9 +269,10 @@ void initialise_image(gdImagePtr *img){
 
     //Choix de couleur du fond d'écran (noir ou blanc)
     int x=0;
-    while (x != 1 && x != 2) {
+
+    while(x!=1 && x!=2){
         printf("Fond d'écran en blanc ou en noir :\nTaper 1 : Fond d'écran en blanc\nTaper 2 : Fond d'écran en noir\n");
-        scanf("%d", &x);
+        scanf("%d",&x);
     }
     //création de formes
     if(x==1){
