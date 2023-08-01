@@ -1,7 +1,7 @@
 # pie
 @author Raphael De Oliveira
 
-Download the executable file named exec.
+Compile the main.c and execute.
 
 1) Launch the program exec using a terminal with the following command: ./exec Tokyo=20 London:18 UnitedStates=12 Paris:12
 2) You must provide arguments to the program in the following format: string<separator>integer string<separator>integer string<separator>integer
