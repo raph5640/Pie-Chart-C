@@ -269,11 +269,9 @@ void initialise_image(gdImagePtr *img){
 
     //Choix de couleur du fond d'écran (noir ou blanc)
     int x=0;
-    printf("Fond d'écran en blanc ou en noir :\nTaper 1 : Fond d'écran en blanc\nTaper 2 : Fond d'écran en noir\n");
-    scanf("%d",&x);
-    while(x!=1 && x!=2){
+    while (x != 1 && x != 2) {
         printf("Fond d'écran en blanc ou en noir :\nTaper 1 : Fond d'écran en blanc\nTaper 2 : Fond d'écran en noir\n");
-        scanf("%d",&x);
+        scanf("%d", &x);
     }
     //création de formes
     if(x==1){
