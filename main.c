@@ -114,7 +114,12 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
         //DESSIN DES PARTS DE GATEAU
         int couleur_random = gdImageColorAllocate(*img, rand() % 256, rand() % 256, rand() % 256);      //On génère une nouvelle couleur aléatoire pour chaque part du camembert
         fin = debut + ((double)data_pourcentage[i]/100)*360;
-        gdImageFilledArc(*img, centreX,centreY, rayon,rayon, debut,fin, couleur_random,gdArc);          //On dessine la part de camembert
+
+        int epaisseur = 20; //epaisseur en pixel du camembert pour le 3D
+        for(int i=0;i<epaisseur;i++){
+            gdImageFilledArc(*img, centreX,centreY-i, rayon,rayon, debut,fin, couleur_random,gdArc); //On dessine la part de camembert
+            centreY=centreY-1;
+        }
 
         //Ajout du nom du pays à côté des parts du camembert (coordonnées polaires)
         int stringAngle= debut + ((fin-debut)/2); //Angle moyen entre debut et fin
