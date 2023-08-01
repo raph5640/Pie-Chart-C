@@ -269,6 +269,7 @@ void initialise_tableau(char* argv[], int argc, char* tab[], int tab_size) {
  * param : gdImagePtr
  */
 void initialise_image(gdImagePtr *img){
+    static int y=0;
     *img = gdImageCreate(1000, 1000);
     //definition des couleurs
     int white = gdImageColorAllocate(*img,255,255,255);
@@ -276,16 +277,22 @@ void initialise_image(gdImagePtr *img){
 
     //Choix de couleur du fond d'écran (noir ou blanc)
     int x=0;
-    printf("Fond d'écran en blanc ou en noir :\n");
+    printf("------------------------------------\n");
+    if(y==0){
+        printf("Fond d'écran en blanc ou en noir pour le diagramme en PieCHart :\n");
+    }
+    if(y==1){
+        printf("Fond d'écran en blanc ou en noir pour l'histogramme :\n");
+    }
+
     printf("1 : Blanc\n");
     printf("2 : Noir\n");
     scanf("%d",&x);
-
-    if(x>2 || x<1){
+    while(x!=2 && x!=1){
         printf("Erreur : vous devez entrer un chiffre entre 1 et 2\n");
-        exit(1);
+        scanf("%d",&x);
     }
-
+    y++;
     //création de formes
     if(x==1){
         gdImageFilledRectangle(*img, 0,0, 999 ,999,white);  //Met le fond en blanc
