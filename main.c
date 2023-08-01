@@ -20,8 +20,8 @@ void dessine_histogramme(gdImagePtr *img, char* tab[], int tab_size);
 //voir la déclaration et la documentations de ces fonction a partir de la ligne 44
 
 const char *separator = "=:";                                                //les séparateurs possibles pour les arguments lors du lancement du programme
-const char *titre_pie = "/home/raphael/pie/image_repository/pie.png";        //Chemin de l'image pie ou l'on souhaite qu'elle soit crée
-const char *titre_histo = "/home/raphael/pie/image_repository/histogram.png";//Chemin de l'image histogramme ou l'on souhaite qu'elle soit crée
+const char *titre_pie = "./image_repository/pie.png";        //Chemin de l'image pie ou l'on souhaite qu'elle soit crée
+const char *titre_histo = "./image_repository/histogram.png";//Chemin de l'image histogramme ou l'on souhaite qu'elle soit crée
 
 int main(int argc, char* argv[]) {
 
