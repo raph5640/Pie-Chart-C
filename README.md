@@ -3,7 +3,7 @@ Project PROGRAMMATION C : Pie Chart by @author Raphael De Oliveira
 
 ## Install GDLib
 
-Install the GD library (Graphic Draw) using the command: sudo apt install libgd-dev
+Install the GD library (Graphic Draw) using the command: sudo apt install libgd-dev (Linux)
 
 ## How to
 
