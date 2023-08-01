@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
     // Téléchargement de l'image et libération de la mémoire (image/tableaux/pointeurs)
     telecharge_image(image,0);  //Télécharge l'image pie
     telecharge_image(image_histo,1); //Télécharge l'image histogramme
-    clean(tab, sizeof(tab) / sizeof(tab[0]),image,image_histo); //Libération de mémoire pointeur+
+    clean(tab, sizeof(tab) / sizeof(tab[0]),image,image_histo); //Libération de mémoire pointeurs+images
     return 0;
 }
 
@@ -132,7 +132,7 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
         debut = fin;
     }
 
-    //Libération de la mémoire
+    //Libération de la mémoire pour ce tableau data_pays ephémere
     for (int i = 0; i < size_data; i++) {
         free(data_pays[i]);
     }
@@ -209,6 +209,10 @@ void dessine_histogramme(gdImagePtr *img, char* tab[], int tab_size) {
         int nomY = startY + 10;
         gdFontPtr mediumBoldFont = gdFontGetGiant();
         gdImageString(*img, mediumBoldFont, nomX, nomY, (unsigned char *)data_pays[i], black);
+    }
+    //Libération de la mémoire pour ce tableau data_pays ephémere
+    for (int i = 0; i < size_data; i++) {
+        free(data_pays[i]);
     }
 }
 
