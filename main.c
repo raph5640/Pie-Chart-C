@@ -116,11 +116,13 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
         fin = debut + ((double)data_pourcentage[i]/100)*360;
 
         int epaisseur = 20; //epaisseur en pixel du camembert pour le 3D
+        int centreY_transi;
+        centreY_transi=centreY;
         for(int i=0;i<epaisseur;i++){
-            gdImageFilledArc(*img, centreX,centreY-i, rayon,rayon, debut,fin, couleur_random,gdArc); //On dessine la part de camembert
+            gdImageFilledArc(*img, centreX,centreY, rayon,rayon, debut,fin, couleur_random,gdArc); //On dessine la part de camembert
             centreY=centreY-1;
         }
-
+        centreY = centreY_transi;
         //Ajout du nom du pays à côté des parts du camembert (coordonnées polaires)
         int stringAngle= debut + ((fin-debut)/2); //Angle moyen entre debut et fin
         int stringRayon= (rayon/2)+50; //Distance du rayon pour les noms de pays
@@ -274,11 +276,16 @@ void initialise_image(gdImagePtr *img){
 
     //Choix de couleur du fond d'écran (noir ou blanc)
     int x=0;
+    printf("Fond d'écran en blanc ou en noir :\n");
+    printf("1 : Blanc\n");
+    printf("2 : Noir\n");
+    scanf("%d",&x);
 
-    while(x!=1 && x!=2){
-        printf("Fond d'écran en blanc ou en noir :\nTaper 1 : Fond d'écran en blanc\nTaper 2 : Fond d'écran en noir\n");
-        scanf("%d",&x);
+    if(x>2 || x<1){
+        printf("Erreur : vous devez entrer un chiffre entre 1 et 2\n");
+        exit(1);
     }
+
     //création de formes
     if(x==1){
         gdImageFilledRectangle(*img, 0,0, 999 ,999,white);  //Met le fond en blanc
