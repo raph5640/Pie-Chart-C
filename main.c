@@ -22,7 +22,8 @@ void dessine_histogramme(gdImagePtr *img, char* tab[], int tab_size);
 const char *separator = "=:";                                                //les séparateurs possibles pour les arguments lors du lancement du programme
 const char *titre_pie = "./image_repository/pie.png";        //Chemin de l'image pie ou l'on souhaite qu'elle soit crée
 const char *titre_histo = "./image_repository/histogram.png";//Chemin de l'image histogramme ou l'on souhaite qu'elle soit crée
-int fond;   //fond = 1 si le fond d'écran est blanc / fond =2 si le fond d'écran est noir
+int fond_pie;   //fond = 1 si le fond d'écran est blanc / fond =2 si le fond d'écran est noir
+int fond_histo;
 
 int main(int argc, char* argv[]) {
 
@@ -138,7 +139,7 @@ void dessine(gdImagePtr *img, char* tab[], int tab_size){
         printf("\n");
         gdFontPtr smallFont = gdFontGetGiant();
         gdImageLine(*img, centreX, centreY, stringX+5, stringY+5, couleur_random);
-        if(fond==1){
+        if(fond_pie==1){
             gdImageString(*img, smallFont, stringX, stringY, (unsigned char*)data_pays[i], black);      //Met le texte en noir si le fond est blanc
         }else{
             gdImageString(*img, smallFont, stringX, stringY, (unsigned char*)data_pays[i], white);      //Met le texte en blanc si le fond est noir
@@ -213,7 +214,7 @@ void dessine_histogramme(gdImagePtr *img, char* tab[], int tab_size) {
         int texteX = x1 + barWidth / 2 - 10;
         int texteY = y1 - 20;
         gdFontPtr smallFont = gdFontGetGiant();
-        if(fond ==1){
+        if(fond_histo ==1){
             gdImageString(*img, smallFont, texteX, texteY, (unsigned char *)valeur, black);
         }else{
             gdImageString(*img, smallFont, texteX, texteY, (unsigned char *)valeur, white);
@@ -223,7 +224,7 @@ void dessine_histogramme(gdImagePtr *img, char* tab[], int tab_size) {
         int nomX = x1 + barWidth / 2 - (strlen(data_pays[i]) * 3); // Ajustement pour centrer le texte sous la barre
         int nomY = startY + 10;
         gdFontPtr mediumBoldFont = gdFontGetGiant();
-        if(fond==1){
+        if(fond_histo==1){
             gdImageString(*img, mediumBoldFont, nomX, nomY, (unsigned char *)data_pays[i], black);      //Met le text en noir si le fond est blanc
         }else{
             gdImageString(*img, mediumBoldFont, nomX, nomY, (unsigned char *)data_pays[i], white);      //Met le text en blanc si le fond est noir
@@ -292,6 +293,11 @@ void initialise_image(gdImagePtr *img){
         printf("Erreur : vous devez entrer un chiffre entre 1 et 2\n");
         scanf("%d",&x);
     }
+    if(y==0){
+        fond_pie=x;
+    }else{
+        fond_histo=x;
+    }
     y++;
     //création de formes
     if(x==1){
@@ -299,7 +305,7 @@ void initialise_image(gdImagePtr *img){
     }else if(x==2){
         gdImageFilledRectangle(*img, 0,0, 999 ,999,black);  //Met le fond en noir
     }
-    fond = x;
+
 
 }
 
