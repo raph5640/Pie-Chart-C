@@ -1,7 +1,6 @@
 # Project PROGRAMMATION C : Pie Chart
-![pie (4)](https://github.com/raph5640/pie/assets/140059828/2dbd0b6e-c3d0-48de-92f2-c9a84844a309)
-
 Project PROGRAMMATION C : Pie Chart by `@author` Raphael De Oliveira
+![pie (4)](https://github.com/raph5640/pie/assets/140059828/2dbd0b6e-c3d0-48de-92f2-c9a84844a309)
 
 ## Install GDLib (Linux Debian)
 
