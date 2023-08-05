@@ -17,3 +17,5 @@ Install the GD library (Graphic Draw) using the command: `sudo apt install libgd
 6) The `<separator>` can be either "=" or ":".
 
 !! WARNING !! : if you execute `pie` and don't give it any arguments, it will stop the program with exit 1 and a WARNING. (Likewise, if the sum of the percentages is strictly greater than 100)
+
+![pie (4)](https://github.com/raph5640/pie/assets/140059828/2dbd0b6e-c3d0-48de-92f2-c9a84844a309)
